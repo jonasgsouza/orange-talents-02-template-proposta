@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -26,20 +26,20 @@ public class BiometriaController {
     @PostMapping("/api/cartoes/{id}/biometria")
     @Transactional
     public ResponseEntity<?> cadastrarBiometria(@RequestBody @Valid NovaBiometriaRequest request,
-                                                @PathVariable Long id) {
+                                                @PathVariable Long id,
+                                                UriComponentsBuilder uriBuilder
+    ) {
         var cartao = cartaoRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cartão não encontrado"));
-        var biometria = request.toModel(cartao);
-        cartao.adicionarBiometria(biometria);
-        var uri = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
+        var biometria = biometriaRepository.save(request.toModel(cartao));
+        var uri = uriBuilder
+                .path("/api/biometria/{id}")
                 .buildAndExpand(biometria.getId())
                 .toUri();
         return ResponseEntity.created(uri).build();
     }
 
-    @GetMapping("/api/cartoes/{id}/biometria")
+    @GetMapping("/api/biometria/{id}")
     public ResponseEntity<BiometriaResponse> buscarBiometria(@PathVariable Long id) {
         var biometria = biometriaRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Biometria não encontrada"));

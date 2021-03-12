@@ -22,8 +22,6 @@ public class Cartao {
     @NotBlank
     private String titular;
 
-    @OneToMany(mappedBy = "cartao", cascade = CascadeType.PERSIST)
-    private List<Biometria> biometrias;
 
     @Deprecated
     public Cartao() {
@@ -37,9 +35,5 @@ public class Cartao {
 
     public Long getId() {
         return id;
-    }
-
-    public void adicionarBiometria(Biometria biometria) {
-        biometrias.add(biometria);
     }
 }

@@ -1,7 +1,8 @@
 package br.com.zup.proposta.propostas.job;
 
-import br.com.zup.proposta.propostas.repository.PropostaRepository;
 import br.com.zup.proposta.propostas.httpclient.CartaoClient;
+import br.com.zup.proposta.propostas.model.PropostaStatus;
+import br.com.zup.proposta.propostas.repository.PropostaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -25,7 +26,8 @@ public class ConsultaCartaoJob {
     @Scheduled(fixedDelayString = "${periodicidade.consulta-cartao}")
     public void buscarCartoes() {
         logger.info("Consultando cartões...");
-        var propostas = propostaRepository.findByNumeroCartaoNull();
+        var propostas = propostaRepository
+                .findByNumeroCartaoNullAndStatusEquals(PropostaStatus.ELEGIVEL);
         logger.info(propostas.size() + " proposta(s) encontrada(s)");
         propostas.parallelStream().forEach(proposta -> {
             logger.info("Consultando cartão");

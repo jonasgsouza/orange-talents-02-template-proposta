@@ -1,6 +1,6 @@
-package br.com.zup.proposta.propostas.httpclient;
+package br.com.zup.proposta.cartoes.httpclient;
 
-import br.com.zup.proposta.propostas.httpclient.response.CartaoResponse;
+import br.com.zup.proposta.cartoes.httpclient.response.CartaoResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;

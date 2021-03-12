@@ -1,6 +1,6 @@
-package br.com.zup.proposta.propostas.job;
+package br.com.zup.proposta.cartoes.job;
 
-import br.com.zup.proposta.propostas.httpclient.CartaoClient;
+import br.com.zup.proposta.cartoes.httpclient.CartaoClient;
 import br.com.zup.proposta.propostas.model.PropostaStatus;
 import br.com.zup.proposta.propostas.repository.PropostaRepository;
 import org.slf4j.Logger;
@@ -27,9 +27,9 @@ public class ConsultaCartaoJob {
     public void buscarCartoes() {
         logger.info("Consultando cartões...");
         var propostas = propostaRepository
-                .findByNumeroCartaoNullAndStatusEquals(PropostaStatus.ELEGIVEL);
+                .findByCartaoIdNullAndStatusEquals(PropostaStatus.ELEGIVEL);
         logger.info(propostas.size() + " proposta(s) encontrada(s)");
-        propostas.parallelStream().forEach(proposta -> {
+        propostas.forEach(proposta -> {
             logger.info("Consultando cartão");
             proposta.consultarCartao(cartaoClient);
         });

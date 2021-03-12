@@ -16,6 +16,6 @@ public interface PropostaRepository extends CrudRepository<Proposta, Long> {
     Boolean existsByDocumento(String documento);
 
     @Lock(LockModeType.PESSIMISTIC_READ)
-    List<Proposta> findByNumeroCartaoNullAndStatusEquals(PropostaStatus status);
+    List<Proposta> findByCartaoIdNullAndStatusEquals(PropostaStatus status);
 
 }

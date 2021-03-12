@@ -4,18 +4,18 @@ import br.com.zup.proposta.propostas.model.Proposta;
 import br.com.zup.proposta.propostas.model.PropostaStatus;
 
 public class PropostaResponse {
-    private Long id;
+    private Long idCartao;
     private String documento;
     private PropostaStatus status;
 
     public PropostaResponse(Proposta proposta) {
-        this.id = proposta.getId();
+        this.idCartao = proposta.getCartao().getId();
         this.documento = proposta.getDocumento();
         this.status = proposta.getStatus();
     }
 
-    public Long getId() {
-        return id;
+    public Long getIdCartao() {
+        return idCartao;
     }
 
     public String getDocumento() {

@@ -1,8 +1,9 @@
 package br.com.zup.proposta.propostas.model;
 
+import br.com.zup.proposta.cartoes.httpclient.CartaoClient;
+import br.com.zup.proposta.cartoes.model.Cartao;
 import br.com.zup.proposta.propostas.httpclient.AnaliseClient;
 import br.com.zup.proposta.propostas.httpclient.request.AnaliseRequest;
-import br.com.zup.proposta.propostas.httpclient.CartaoClient;
 import br.com.zup.proposta.validation.annotation.CpfOuCnpj;
 import org.springframework.util.Assert;
 
@@ -42,7 +43,8 @@ public class Proposta {
     @Enumerated(EnumType.STRING)
     private PropostaStatus status;
 
-    private String numeroCartao;
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private Cartao cartao;
 
     @Deprecated
     public Proposta() {
@@ -68,7 +70,7 @@ public class Proposta {
 
     public void consultarCartao(CartaoClient client) {
         var response = client.consultar(id);
-        numeroCartao = response.getId();
+        cartao = response.toModel(this);
     }
 
     public PropostaStatus getStatus() {
@@ -77,5 +79,9 @@ public class Proposta {
 
     public String getDocumento() {
         return documento;
+    }
+
+    public Cartao getCartao() {
+        return cartao;
     }
 }

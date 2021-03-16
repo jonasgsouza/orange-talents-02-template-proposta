@@ -3,6 +3,7 @@ package br.com.zup.proposta.cartoes.model;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "biometrias")
 public class Biometria {
 
     @Id

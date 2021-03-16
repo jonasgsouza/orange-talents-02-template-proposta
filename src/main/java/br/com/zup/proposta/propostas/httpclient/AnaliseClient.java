@@ -5,7 +5,7 @@ import br.com.zup.proposta.propostas.httpclient.response.AnaliseResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 
-@FeignClient(name = "analise", url = "${analise.url}", fallbackFactory = AnaliseClientFallbackFactory.class)
+@FeignClient(name = "analiseClient", url = "${analiseClient.url}", fallbackFactory = AnaliseClientFallbackFactory.class)
 public interface AnaliseClient {
 
     @PostMapping(value = "/api/solicitacao", consumes = "application/json")

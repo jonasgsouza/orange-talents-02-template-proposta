@@ -15,6 +15,7 @@ import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 
 @Entity
+@Table(name = "propostas")
 public class Proposta {
 
     @Id
@@ -23,14 +24,16 @@ public class Proposta {
 
     @CpfOuCnpj
     @NotBlank
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String documento;
 
     @NotBlank
+    @Column(nullable = false)
     private String nome;
 
     @Email
     @NotBlank
+    @Column(nullable = false)
     private String email;
 
     @Embedded
@@ -38,6 +41,7 @@ public class Proposta {
 
     @NotNull
     @Positive
+    @Column(nullable = false)
     private BigDecimal salario;
 
     @Enumerated(EnumType.STRING)
@@ -64,7 +68,7 @@ public class Proposta {
 
     public void enviarParaAnalise(AnaliseClient client) {
         Assert.notNull(id, "A proposta não possui um id");
-        var response = client.solicitarAnalise(new AnaliseRequest(documento, nome, id.toString()));
+        var response = client.solicitarAnalise(new AnaliseRequest(this));
         status = response.getResultadoSolicitacao().getPropostaStatus();
     }
 
@@ -83,5 +87,9 @@ public class Proposta {
 
     public Cartao getCartao() {
         return cartao;
+    }
+
+    public String getNome() {
+        return nome;
     }
 }

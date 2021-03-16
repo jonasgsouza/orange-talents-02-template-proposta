@@ -1,14 +1,16 @@
 package br.com.zup.proposta.propostas.httpclient.request;
 
+import br.com.zup.proposta.propostas.model.Proposta;
+
 public class AnaliseRequest {
     private String documento;
     private String nome;
     private String idProposta;
 
-    public AnaliseRequest(String documento, String nome, String idProposta) {
-        this.documento = documento;
-        this.nome = nome;
-        this.idProposta = idProposta;
+    public AnaliseRequest(Proposta proposta) {
+        this.documento = proposta.getDocumento();
+        this.nome = proposta.getNome();
+        this.idProposta = proposta.getId().toString();
     }
 
     public String getDocumento() {

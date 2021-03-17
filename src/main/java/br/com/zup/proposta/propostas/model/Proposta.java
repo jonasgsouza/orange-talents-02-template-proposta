@@ -1,6 +1,7 @@
 package br.com.zup.proposta.propostas.model;
 
 import br.com.zup.proposta.cartoes.httpclient.CartaoClient;
+import br.com.zup.proposta.cartoes.httpclient.response.CartaoResponse;
 import br.com.zup.proposta.cartoes.model.Cartao;
 import br.com.zup.proposta.propostas.httpclient.AnaliseClient;
 import br.com.zup.proposta.propostas.httpclient.request.AnaliseRequest;
@@ -13,6 +14,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Entity
 @Table(name = "propostas")
@@ -21,6 +23,9 @@ public class Proposta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
+    private UUID uuid = UUID.randomUUID();
 
     @CpfOuCnpj
     @NotBlank
@@ -73,7 +78,7 @@ public class Proposta {
     }
 
     public void consultarCartao(CartaoClient client) {
-        var response = client.consultar(id);
+        CartaoResponse response = client.consultar(uuid);
         cartao = response.toModel(this);
     }
 
@@ -91,5 +96,9 @@ public class Proposta {
 
     public String getNome() {
         return nome;
+    }
+
+    public UUID getUuid() {
+        return uuid;
     }
 }

@@ -2,15 +2,17 @@ package br.com.zup.proposta.propostas.httpclient.request;
 
 import br.com.zup.proposta.propostas.model.Proposta;
 
+import java.util.UUID;
+
 public class AnaliseRequest {
     private String documento;
     private String nome;
-    private String idProposta;
+    private UUID idProposta;
 
     public AnaliseRequest(Proposta proposta) {
         this.documento = proposta.getDocumento();
         this.nome = proposta.getNome();
-        this.idProposta = proposta.getId().toString();
+        this.idProposta = proposta.getUuid();
     }
 
     public String getDocumento() {
@@ -21,7 +23,7 @@ public class AnaliseRequest {
         return nome;
     }
 
-    public String getIdProposta() {
+    public UUID getIdProposta() {
         return idProposta;
     }
 }

@@ -2,6 +2,7 @@ package br.com.zup.proposta.cartoes.controller;
 
 import br.com.zup.proposta.cartoes.httpclient.CartaoClient;
 import br.com.zup.proposta.cartoes.model.Bloqueio;
+import br.com.zup.proposta.cartoes.model.Cartao;
 import br.com.zup.proposta.cartoes.repository.CartaoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.util.UUID;
 
 @RestController
 public class BloqueioController {
@@ -26,10 +28,10 @@ public class BloqueioController {
         this.cartaoClient = cartaoClient;
     }
 
-    @PostMapping("/api/cartoes/{id}/bloquear")
+    @PostMapping("/api/cartoes/{cartaoUuid}/bloquear")
     @Transactional
-    public ResponseEntity<?> bloquearCartao(@PathVariable Long id, HttpServletRequest request) {
-        var cartao = cartaoRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cartão não encontrado"));
+    public ResponseEntity<?> bloquearCartao(@PathVariable UUID cartaoUuid, HttpServletRequest request) {
+        Cartao cartao = cartaoRepository.findByUuid(cartaoUuid).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cartão não encontrado"));
         cartao.bloquear(new Bloqueio(cartao, request.getRemoteAddr(), request.getHeader("User-Agent")), cartaoClient);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

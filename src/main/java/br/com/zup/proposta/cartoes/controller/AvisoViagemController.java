@@ -2,6 +2,7 @@ package br.com.zup.proposta.cartoes.controller;
 
 import br.com.zup.proposta.cartoes.controller.request.NovoAvisoViagemRequest;
 import br.com.zup.proposta.cartoes.httpclient.CartaoClient;
+import br.com.zup.proposta.cartoes.model.Cartao;
 import br.com.zup.proposta.cartoes.repository.CartaoRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.util.UUID;
 
 @RestController
 public class AvisoViagemController {
@@ -25,10 +27,10 @@ public class AvisoViagemController {
         this.cartaoClient = cartaoClient;
     }
 
-    @PostMapping("/api/cartoes/{cartaoId}/avisos")
+    @PostMapping("/api/cartoes/{cartaoUuid}/avisos")
     @Transactional
-    public ResponseEntity<?> registrarAviso(@PathVariable Long cartaoId, @RequestBody @Valid NovoAvisoViagemRequest request, HttpServletRequest servletRequest) {
-        var cartao = cartaoRepository.findById(cartaoId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cartão não encontrado"));
+    public ResponseEntity<?> registrarAviso(@PathVariable UUID cartaoUuid, @RequestBody @Valid NovoAvisoViagemRequest request, HttpServletRequest servletRequest) {
+        Cartao cartao = cartaoRepository.findByUuid(cartaoUuid).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cartão não encontrado"));
         cartao.registrarAvisoViagem(request.toModel(cartao, servletRequest), cartaoClient);
         return ResponseEntity.ok().build();
     }

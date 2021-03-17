@@ -1,6 +1,7 @@
 package br.com.zup.proposta.cartoes.job;
 
 import br.com.zup.proposta.cartoes.httpclient.CartaoClient;
+import br.com.zup.proposta.propostas.model.Proposta;
 import br.com.zup.proposta.propostas.model.PropostaStatus;
 import br.com.zup.proposta.propostas.repository.PropostaRepository;
 import org.slf4j.Logger;
@@ -9,6 +10,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Component
 public class ConsultaCartaoJob {
@@ -26,7 +28,7 @@ public class ConsultaCartaoJob {
     @Scheduled(fixedDelayString = "${periodicidade.consulta-cartao}")
     public void buscarCartoes() {
         logger.info("Consultando cartões...");
-        var propostas = propostaRepository
+        List<Proposta> propostas = propostaRepository
                 .findByCartaoIdNullAndStatusEquals(PropostaStatus.ELEGIVEL);
         logger.info(propostas.size() + " proposta(s) encontrada(s)");
         propostas.forEach(proposta -> {

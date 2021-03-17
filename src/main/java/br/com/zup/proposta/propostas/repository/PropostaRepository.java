@@ -8,6 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import javax.persistence.LockModeType;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface PropostaRepository extends CrudRepository<Proposta, Long> {
 
@@ -18,4 +19,5 @@ public interface PropostaRepository extends CrudRepository<Proposta, Long> {
     @Lock(LockModeType.PESSIMISTIC_READ)
     List<Proposta> findByCartaoIdNullAndStatusEquals(PropostaStatus status);
 
+    Optional<Proposta> findByUuid(UUID propostaUuid);
 }

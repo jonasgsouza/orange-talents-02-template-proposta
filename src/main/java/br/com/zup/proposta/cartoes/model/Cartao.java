@@ -3,6 +3,8 @@ package br.com.zup.proposta.cartoes.model;
 import br.com.zup.proposta.cartoes.httpclient.CartaoClient;
 import br.com.zup.proposta.cartoes.httpclient.request.AvisoRequest;
 import br.com.zup.proposta.cartoes.httpclient.request.BloqueioRequest;
+import br.com.zup.proposta.cartoes.httpclient.request.CarteiraRequest;
+import br.com.zup.proposta.cartoes.httpclient.response.BloqueioResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -10,8 +12,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "cartoes")
@@ -20,6 +21,10 @@ public class Cartao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotNull
+    @Column(nullable = false)
+    private UUID uuid = UUID.randomUUID();
 
     @NotBlank
     @Column(nullable = false)
@@ -42,6 +47,9 @@ public class Cartao {
     @OneToMany(mappedBy = "cartao", cascade = CascadeType.PERSIST)
     private List<AvisoViagem> avisos = new ArrayList<>();
 
+    @OneToMany(mappedBy = "cartao", cascade = CascadeType.PERSIST)
+    private Set<Carteira> carteiras = new HashSet<>();
+
     @Deprecated
     public Cartao() {
     }
@@ -63,7 +71,7 @@ public class Cartao {
     public void bloquear(Bloqueio bloqueio, CartaoClient client) {
         if (bloqueado())
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "O cartão já está bloqueado");
-        var response = client.bloquear(numeroCartao, new BloqueioRequest("propostas"));
+        BloqueioResponse response = client.bloquear(numeroCartao, new BloqueioRequest("propostas"));
         status = response.getResultado().getCartaoStatus();
         bloqueios.add(bloqueio);
     }
@@ -73,5 +81,14 @@ public class Cartao {
         avisos.add(aviso);
     }
 
+    public void adicionarCarteira(Carteira carteira, CartaoClient client) {
+        client.adicionarCarteira(numeroCartao, new CarteiraRequest(carteira));
+        carteiras.add(carteira);
+    }
+
+
+    public UUID getUuid() {
+        return uuid;
+    }
 
 }

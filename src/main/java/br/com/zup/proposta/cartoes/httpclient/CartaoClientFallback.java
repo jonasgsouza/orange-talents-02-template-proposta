@@ -1,6 +1,8 @@
 package br.com.zup.proposta.cartoes.httpclient;
 
+import br.com.zup.proposta.cartoes.httpclient.request.AvisoRequest;
 import br.com.zup.proposta.cartoes.httpclient.request.BloqueioRequest;
+import br.com.zup.proposta.cartoes.httpclient.response.AvisoResponse;
 import br.com.zup.proposta.cartoes.httpclient.response.BloqueioResponse;
 import br.com.zup.proposta.cartoes.httpclient.response.CartaoResponse;
 import org.springframework.http.HttpStatus;
@@ -18,5 +20,10 @@ public class CartaoClientFallback implements CartaoClient {
     @Override
     public BloqueioResponse bloquear(String cartao, BloqueioRequest request) {
         throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Não foi possível bloquear o cartão");
+    }
+
+    @Override
+    public AvisoResponse registrarAviso(String numeroCartao, AvisoRequest request) {
+        throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Não foi possível registrar o aviso");
     }
 }

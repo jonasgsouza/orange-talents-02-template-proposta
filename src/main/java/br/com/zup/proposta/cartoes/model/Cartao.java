@@ -1,6 +1,7 @@
 package br.com.zup.proposta.cartoes.model;
 
 import br.com.zup.proposta.cartoes.httpclient.CartaoClient;
+import br.com.zup.proposta.cartoes.httpclient.request.AvisoRequest;
 import br.com.zup.proposta.cartoes.httpclient.request.BloqueioRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
@@ -38,6 +39,9 @@ public class Cartao {
     @OneToMany(mappedBy = "cartao", cascade = CascadeType.PERSIST)
     private List<Bloqueio> bloqueios = new ArrayList<>();
 
+    @OneToMany(mappedBy = "cartao", cascade = CascadeType.PERSIST)
+    private List<AvisoViagem> avisos = new ArrayList<>();
+
     @Deprecated
     public Cartao() {
     }
@@ -63,4 +67,11 @@ public class Cartao {
         status = response.getResultado().getCartaoStatus();
         bloqueios.add(bloqueio);
     }
+
+    public void registrarAvisoViagem(AvisoViagem aviso, CartaoClient client) {
+        client.registrarAviso(numeroCartao, new AvisoRequest(aviso));
+        avisos.add(aviso);
+    }
+
+
 }

@@ -3,7 +3,7 @@ package br.com.zup.proposta.cartoes.httpclient.response;
 import br.com.zup.proposta.cartoes.model.CartaoStatus;
 
 public enum ResultadoBloqueio {
-    BLOQUEADO(CartaoStatus.BLOQUEADO), LIBERADO(CartaoStatus.LIBERADO);
+    BLOQUEADO(CartaoStatus.BLOQUEADO);
 
     private CartaoStatus cartaoStatus;
 

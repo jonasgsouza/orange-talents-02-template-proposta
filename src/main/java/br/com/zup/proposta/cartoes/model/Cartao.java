@@ -6,6 +6,7 @@ import br.com.zup.proposta.cartoes.httpclient.request.BloqueioRequest;
 import br.com.zup.proposta.cartoes.httpclient.request.CarteiraRequest;
 import br.com.zup.proposta.cartoes.httpclient.response.BloqueioResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.Assert;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.*;
@@ -39,7 +40,7 @@ public class Cartao {
     private String titular;
 
     @Enumerated(EnumType.STRING)
-    private CartaoStatus status = CartaoStatus.LIBERADO;
+    private CartaoStatus status = CartaoStatus.OK;
 
     @OneToMany(mappedBy = "cartao", cascade = CascadeType.PERSIST)
     private List<Bloqueio> bloqueios = new ArrayList<>();
@@ -58,10 +59,6 @@ public class Cartao {
         this.numeroCartao = numeroCartao;
         this.emitidoEm = emitidoEm;
         this.titular = titular;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public Boolean bloqueado() {
@@ -83,9 +80,8 @@ public class Cartao {
 
     public void adicionarCarteira(Carteira carteira, CartaoClient client) {
         client.adicionarCarteira(numeroCartao, new CarteiraRequest(carteira));
-        carteiras.add(carteira);
+        Assert.isTrue(carteiras.add(carteira), "Carteira já foi associada ao cartão");
     }
-
 
     public UUID getUuid() {
         return uuid;

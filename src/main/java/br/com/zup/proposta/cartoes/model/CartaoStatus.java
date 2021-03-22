@@ -1,5 +1,5 @@
 package br.com.zup.proposta.cartoes.model;
 
 public enum CartaoStatus {
-    BLOQUEADO, LIBERADO;
+    BLOQUEADO, OK;
 }

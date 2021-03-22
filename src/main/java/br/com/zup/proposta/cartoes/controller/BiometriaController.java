@@ -32,8 +32,7 @@ public class BiometriaController {
                                                 @PathVariable UUID cartaoUuid,
                                                 UriComponentsBuilder uriBuilder
     ) {
-        Cartao cartao = cartaoRepository.findByUuid(cartaoUuid)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cartão não encontrado"));
+        Cartao cartao = cartaoRepository.findByUuid(cartaoUuid).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cartão não encontrado"));
         Biometria biometria = biometriaRepository.save(request.toModel(cartao));
         var uri = uriBuilder
                 .path("/api/biometria/{id}")

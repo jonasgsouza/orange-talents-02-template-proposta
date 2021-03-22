@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.UUID;
 
-@FeignClient(name = "cartaoClient", url = "${cartaoClient.url}/api/cartoes", fallback = CartaoClientFallback.class)
+@FeignClient(name = "cartaoClient", url = "${cartaoClient.url}", fallback = CartaoClientFallback.class)
 public interface CartaoClient {
 
     @GetMapping

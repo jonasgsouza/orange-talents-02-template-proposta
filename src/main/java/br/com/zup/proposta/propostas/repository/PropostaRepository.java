@@ -12,9 +12,9 @@ import java.util.UUID;
 
 public interface PropostaRepository extends CrudRepository<Proposta, Long> {
 
-    Optional<Proposta> findByDocumento(String documento);
+    Optional<Proposta> findByDocumentoHash(String documento);
 
-    Boolean existsByDocumento(String documento);
+    Boolean existsByDocumentoHash(String documento);
 
     @Lock(LockModeType.PESSIMISTIC_READ)
     List<Proposta> findByCartaoIdNullAndStatusEquals(PropostaStatus status);

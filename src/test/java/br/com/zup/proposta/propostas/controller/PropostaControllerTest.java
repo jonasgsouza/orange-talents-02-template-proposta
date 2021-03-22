@@ -4,6 +4,7 @@ import br.com.zup.proposta.propostas.controller.request.NovaPropostaRequest;
 import br.com.zup.proposta.propostas.controller.request.NovoEnderecoRequest;
 import br.com.zup.proposta.propostas.model.PropostaStatus;
 import br.com.zup.proposta.propostas.repository.PropostaRepository;
+import br.com.zup.proposta.util.SHA256Digest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -55,7 +56,7 @@ class PropostaControllerTest {
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(request))
         ).andExpect(MockMvcResultMatchers.status().isCreated());
-        var optional = propostaRepository.findByDocumento(request.getDocumento());
+        var optional = propostaRepository.findByDocumentoHash(SHA256Digest.digest(request.getDocumento()));
         Assertions.assertTrue(optional.isPresent());
         var proposta = optional.get();
         Assertions.assertEquals(PropostaStatus.ELEGIVEL, proposta.getStatus());
@@ -84,7 +85,7 @@ class PropostaControllerTest {
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(request))
         ).andExpect(MockMvcResultMatchers.status().isCreated());
-        var optional = propostaRepository.findByDocumento(request.getDocumento());
+        var optional = propostaRepository.findByDocumentoHash(SHA256Digest.digest(request.getDocumento()));
         Assertions.assertTrue(optional.isPresent());
         var proposta = optional.get();
         Assertions.assertEquals(PropostaStatus.NAO_ELEGIVEL, proposta.getStatus());

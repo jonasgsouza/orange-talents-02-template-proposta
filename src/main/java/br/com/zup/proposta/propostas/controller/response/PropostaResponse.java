@@ -2,6 +2,7 @@ package br.com.zup.proposta.propostas.controller.response;
 
 import br.com.zup.proposta.propostas.model.Proposta;
 import br.com.zup.proposta.propostas.model.PropostaStatus;
+import br.com.zup.proposta.util.EncryptionUtil;
 import org.springframework.lang.Nullable;
 
 import java.util.UUID;
@@ -12,11 +13,11 @@ public class PropostaResponse {
     private String documento;
     private PropostaStatus status;
 
-    public PropostaResponse(Proposta proposta) {
+    public PropostaResponse(Proposta proposta, EncryptionUtil encryptionUtil) {
         if (proposta.getCartao() != null) {
             this.idCartao = proposta.getCartao().getUuid();
         }
-        this.documento = proposta.getDocumento();
+        this.documento = proposta.getDecryptedDocumento(encryptionUtil);
         this.status = proposta.getStatus();
     }
 

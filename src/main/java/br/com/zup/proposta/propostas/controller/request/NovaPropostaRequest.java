@@ -1,6 +1,7 @@
 package br.com.zup.proposta.propostas.controller.request;
 
 import br.com.zup.proposta.propostas.model.Proposta;
+import br.com.zup.proposta.util.EncryptionUtil;
 import br.com.zup.proposta.validation.annotation.CpfOuCnpj;
 
 import javax.validation.Valid;
@@ -59,7 +60,7 @@ public class NovaPropostaRequest {
         return salario;
     }
 
-    public Proposta toModel() {
-        return new Proposta(documento, nome, email, endereco.toModel(), salario);
+    public Proposta toModel(EncryptionUtil encryptionUtil) {
+        return new Proposta(documento, nome, email, endereco.toModel(), salario, encryptionUtil);
     }
 }

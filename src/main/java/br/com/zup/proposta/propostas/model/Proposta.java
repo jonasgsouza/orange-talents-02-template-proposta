@@ -5,7 +5,8 @@ import br.com.zup.proposta.cartoes.httpclient.response.CartaoResponse;
 import br.com.zup.proposta.cartoes.model.Cartao;
 import br.com.zup.proposta.propostas.httpclient.AnaliseClient;
 import br.com.zup.proposta.propostas.httpclient.request.AnaliseRequest;
-import br.com.zup.proposta.validation.annotation.CpfOuCnpj;
+import br.com.zup.proposta.util.EncryptionUtil;
+import br.com.zup.proposta.util.SHA256Digest;
 import org.springframework.util.Assert;
 
 import javax.persistence.*;
@@ -27,10 +28,13 @@ public class Proposta {
     @Column(nullable = false)
     private UUID uuid = UUID.randomUUID();
 
-    @CpfOuCnpj
     @NotBlank
     @Column(unique = true, nullable = false)
     private String documento;
+
+    @NotBlank
+    @Column(unique = true, nullable = false)
+    private String documentoHash;
 
     @NotBlank
     @Column(nullable = false)
@@ -59,8 +63,9 @@ public class Proposta {
     public Proposta() {
     }
 
-    public Proposta(@NotBlank String documento, @NotBlank String nome, @Email @NotBlank String email, Endereco endereco, @NotNull @Positive BigDecimal salario) {
-        this.documento = documento;
+    public Proposta(@NotBlank String documento, @NotBlank String nome, @Email @NotBlank String email, Endereco endereco, @NotNull @Positive BigDecimal salario, EncryptionUtil encryptionUtil) {
+        this.documento = encryptionUtil.textEncrypt(documento);
+        this.documentoHash = SHA256Digest.digest(documento);
         this.nome = nome;
         this.email = email;
         this.endereco = endereco;
@@ -90,6 +95,10 @@ public class Proposta {
         return documento;
     }
 
+    public String getDecryptedDocumento(EncryptionUtil encryptionUtil) {
+        return encryptionUtil.textDecrypt(documento);
+    }
+
     public Cartao getCartao() {
         return cartao;
     }
@@ -100,5 +109,9 @@ public class Proposta {
 
     public UUID getUuid() {
         return uuid;
+    }
+
+    public String getDocumentoHash() {
+        return documentoHash;
     }
 }

@@ -76,9 +76,9 @@ public class Proposta {
         return id;
     }
 
-    public void enviarParaAnalise(AnaliseClient client) {
-        Assert.notNull(id, "A proposta não possui um id");
-        var response = client.solicitarAnalise(new AnaliseRequest(this));
+    public void enviarParaAnalise(AnaliseClient client, EncryptionUtil encryptionUtil) {
+        Assert.notNull(uuid, "A proposta não possui um UUID");
+        var response = client.solicitarAnalise(new AnaliseRequest(this, encryptionUtil));
         status = response.getResultadoSolicitacao().getPropostaStatus();
     }
 

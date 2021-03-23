@@ -87,4 +87,8 @@ public class Cartao {
         return uuid;
     }
 
+    public String getNumeroCartao() {
+        return numeroCartao;
+    }
+
 }

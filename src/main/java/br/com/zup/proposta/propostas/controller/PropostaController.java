@@ -37,7 +37,7 @@ public class PropostaController {
         if (propostaRepository.existsByDocumentoHash(proposta.getDocumentoHash()))
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Já existe uma proposta para o mesmo documento");
         propostaRepository.save(proposta);
-        proposta.enviarParaAnalise(analiseClient);
+        proposta.enviarParaAnalise(analiseClient, encryptionUtil);
         var uri = uriBuilder.path("/api/propostas/{id}")
                 .buildAndExpand(proposta.getUuid())
                 .toUri();
@@ -46,7 +46,7 @@ public class PropostaController {
 
     @GetMapping("/{propostaUuid}")
     public ResponseEntity<PropostaResponse> buscarProposta(@PathVariable UUID propostaUuid) {
-        Proposta proposta = propostaRepository.findByUuid(propostaUuid).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Proposta proposta = propostaRepository.findByUuid(propostaUuid).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Proposta não encontrada"));
         return ResponseEntity.ok(new PropostaResponse(proposta, encryptionUtil));
     }
 }

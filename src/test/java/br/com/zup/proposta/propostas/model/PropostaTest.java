@@ -12,7 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -41,7 +40,7 @@ class PropostaTest {
 
     @BeforeEach
     void setUp() {
-        when(analiseClient.solicitarAnalise(Mockito.any(AnaliseRequest.class))).then(var1 -> {
+        when(analiseClient.solicitarAnalise(any(AnaliseRequest.class))).then(var1 -> {
             AnaliseRequest request = var1.getArgument(0, AnaliseRequest.class);
             return request.getDocumento().startsWith("3") ? new AnaliseResponse(ResultadoAnalise.COM_RESTRICAO) : new AnaliseResponse(ResultadoAnalise.SEM_RESTRICAO);
         });
@@ -49,7 +48,7 @@ class PropostaTest {
 
     @Test
     void deveriaEnviarParaAnaliseEDevolverStatusElegivel() {
-        String documento = "12345678909";
+        var documento = "12345678909";
         String randomString = SHA256Digest.digest(documento);
         when(encryptionUtil.textEncrypt(documento)).thenReturn(randomString);
         when(encryptionUtil.textDecrypt(randomString)).thenReturn(documento);
@@ -67,7 +66,7 @@ class PropostaTest {
 
     @Test
     void deveriaEnviarParaAnaliseEDevolverStatusNaoElegivel() {
-        String documento = "37924849009";
+        var documento = "37924849009";
         String randomString = SHA256Digest.digest(documento);
         when(encryptionUtil.textEncrypt(documento)).thenReturn(randomString);
         when(encryptionUtil.textDecrypt(randomString)).thenReturn(documento);

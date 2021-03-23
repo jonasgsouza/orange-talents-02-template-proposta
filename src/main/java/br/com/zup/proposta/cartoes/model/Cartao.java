@@ -80,7 +80,8 @@ public class Cartao {
 
     public void adicionarCarteira(Carteira carteira, CartaoClient client) {
         client.adicionarCarteira(numeroCartao, new CarteiraRequest(carteira));
-        Assert.isTrue(carteiras.add(carteira), "Carteira já foi associada ao cartão");
+        if (!carteiras.add(carteira))
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Carteira já foi associada ao cartão");
     }
 
     public UUID getUuid() {
@@ -91,4 +92,15 @@ public class Cartao {
         return numeroCartao;
     }
 
+    public CartaoStatus getStatus() {
+        return status;
+    }
+
+    public List<Bloqueio> getBloqueios() {
+        return Collections.unmodifiableList(bloqueios);
+    }
+
+    public Set<Carteira> getCarteiras() {
+        return Collections.unmodifiableSet(carteiras);
+    }
 }

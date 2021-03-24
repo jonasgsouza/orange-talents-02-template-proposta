@@ -2,17 +2,17 @@ package br.com.zup.proposta.propostas.controller;
 
 import br.com.zup.proposta.propostas.controller.request.NovaPropostaRequest;
 import br.com.zup.proposta.propostas.controller.request.NovoEnderecoRequest;
+import br.com.zup.proposta.propostas.model.Proposta;
 import br.com.zup.proposta.propostas.model.PropostaStatus;
 import br.com.zup.proposta.propostas.repository.PropostaRepository;
 import br.com.zup.proposta.util.SHA256Digest;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -20,6 +20,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -60,9 +63,9 @@ class PropostaControllerTest {
                         .content(objectMapper.writeValueAsString(request))
         ).andExpect(MockMvcResultMatchers.status().isCreated());
         var optional = propostaRepository.findByDocumentoHash(SHA256Digest.digest(request.getDocumento()));
-        Assertions.assertTrue(optional.isPresent());
+        assertTrue(optional.isPresent());
         var proposta = optional.get();
-        Assertions.assertEquals(PropostaStatus.ELEGIVEL, proposta.getStatus());
+        assertEquals(PropostaStatus.ELEGIVEL, proposta.getStatus());
     }
 
     @Test
@@ -82,16 +85,21 @@ class PropostaControllerTest {
                 ),
                 new BigDecimal("1000")
         );
-        mockMvc.perform(
+        MockHttpServletResponse response = mockMvc.perform(
                 MockMvcRequestBuilders
                         .post("/api/propostas")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(request))
-        ).andExpect(MockMvcResultMatchers.status().isCreated());
-        var optional = propostaRepository.findByDocumentoHash(SHA256Digest.digest(request.getDocumento()));
-        Assertions.assertTrue(optional.isPresent());
-        var proposta = optional.get();
-        Assertions.assertEquals(PropostaStatus.NAO_ELEGIVEL, proposta.getStatus());
+        )
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andReturn().getResponse();
+        Optional<Proposta> optional = propostaRepository.findByDocumentoHash(SHA256Digest.digest(request.getDocumento()));
+        assertTrue(optional.isPresent());
+        Proposta proposta = optional.get();
+        String location = response.getHeader("Location");
+        assertNotNull(location);
+        assertTrue(location.contains("/api/propostas/" + proposta.getUuid()));
+        assertEquals(PropostaStatus.NAO_ELEGIVEL, proposta.getStatus());
     }
 
     @Test
@@ -122,7 +130,7 @@ class PropostaControllerTest {
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(request))
         ).andExpect(MockMvcResultMatchers.status().isUnprocessableEntity());
-        Assertions.assertEquals(1, propostaRepository.count());
+        assertEquals(1, propostaRepository.count());
     }
 
     @Test
@@ -147,7 +155,7 @@ class PropostaControllerTest {
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(request))
         ).andExpect(MockMvcResultMatchers.status().isBadRequest());
-        Assertions.assertEquals(0, propostaRepository.count());
+        assertEquals(0, propostaRepository.count());
     }
 
 

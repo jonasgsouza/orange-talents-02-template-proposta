@@ -67,4 +67,5 @@ public class Carteira {
     public UUID getUuid() {
         return uuid;
     }
+
 }

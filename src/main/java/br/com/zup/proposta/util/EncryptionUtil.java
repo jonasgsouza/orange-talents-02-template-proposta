@@ -7,11 +7,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class EncryptionUtil {
+    private final String salt;
+    private final String password;
 
-    @Value("${encryption.password}")
-    private String password;
-    @Value("${encryption.salt}")
-    private String salt;
+    public EncryptionUtil(@Value("${encryption.password}") String password, @Value("${encryption.salt}") String salt) {
+        this.password = password;
+        this.salt = salt;
+    }
 
     public String textEncrypt(String s) {
         return getTextEncryptor().encrypt(s);

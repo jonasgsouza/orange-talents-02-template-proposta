@@ -1,7 +1,6 @@
 package br.com.zup.proposta.cartoes.httpclient.response;
 
 import br.com.zup.proposta.cartoes.model.Cartao;
-import br.com.zup.proposta.propostas.model.Proposta;
 
 import java.time.LocalDateTime;
 
@@ -32,7 +31,7 @@ public class CartaoResponse {
         return titular;
     }
 
-    public Cartao toModel(Proposta proposta) {
+    public Cartao toModel() {
         return new Cartao(id, emitidoEm, titular);
     }
 }

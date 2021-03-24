@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
 @MockitoSettings(strictness = Strictness.WARN)
 class PropostaTest {
 
-    @Mock
+    @Mock()
     private EncryptionUtil encryptionUtil;
 
     @Mock

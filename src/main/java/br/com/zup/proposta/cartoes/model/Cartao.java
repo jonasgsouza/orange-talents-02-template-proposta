@@ -6,7 +6,6 @@ import br.com.zup.proposta.cartoes.httpclient.request.BloqueioRequest;
 import br.com.zup.proposta.cartoes.httpclient.request.CarteiraRequest;
 import br.com.zup.proposta.cartoes.httpclient.response.BloqueioResponse;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.Assert;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.*;

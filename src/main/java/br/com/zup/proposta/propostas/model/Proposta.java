@@ -84,7 +84,7 @@ public class Proposta {
 
     public void consultarCartao(CartaoClient client) {
         CartaoResponse response = client.consultar(uuid);
-        cartao = response.toModel(this);
+        cartao = response.toModel();
     }
 
     public PropostaStatus getStatus() {
